@@ -55,4 +55,31 @@ public class SensorResource {
 
         return filtered;
     }
+    @POST
+    public Response createSensor(Sensor sensor) {
+
+        if (!DataStore.rooms.containsKey(sensor.getRoomId())) {
+            return Response.status(422).entity("Invalid room ID").build();
+        }
+
+        DataStore.sensors.put(sensor.getId(), sensor);
+
+        return Response.status(201).entity(sensor).build();
+    }
+    @PUT
+    @Path("/{id}")
+    public Response updateSensor(@PathParam("id") int id, Sensor updatedSensor) {
+
+        Sensor existing = DataStore.sensors.get(id);
+
+        if (existing == null) {
+            return Response.status(404).entity("Sensor not found").build();
+        }
+
+        existing.setType(updatedSensor.getType());
+        existing.setStatus(updatedSensor.getStatus());
+        existing.setRoomId(updatedSensor.getRoomId());
+
+        return Response.ok(existing).build();
+    }
 }
