@@ -43,4 +43,20 @@ public class SensorResource {
 
         return Response.noContent().build();
     }
+    @GET
+    public  Collection<Sensor> getSensors(@QueryParam("type") String type){
+        if (type == null) {
+            return DataStore.sensors.values();
+        }
+
+        List<Sensor> filtered = new ArrayList<>();
+
+        for (Sensor s : DataStore.sensors.values()) {
+            if (type.equalsIgnoreCase(s.getType())) {
+                filtered.add(s);
+            }
+        }
+
+        return filtered;
+    }
 }
