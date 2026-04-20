@@ -2,6 +2,7 @@ package com.api.resource;
 
 import com.api.DataStore;
 import com.api.model.Room;
+import com.api.model.Sensor;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -45,11 +46,16 @@ public class RoomResource {
             return Response.status(404).build();
         }
 
-        if (!room.getSensorIds().isEmpty()) {
-            throw new RuntimeException("Room not empty");
+
+        for (Sensor s : DataStore.sensors.values()) {
+            if (s.getRoomId() == id) {
+                return Response.status(409)
+                        .entity("Room has sensors, cannot delete")
+                        .build();
+            }
         }
 
         DataStore.rooms.remove(id);
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 }
