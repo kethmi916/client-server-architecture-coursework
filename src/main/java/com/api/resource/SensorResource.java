@@ -11,10 +11,6 @@ import java.util.*;
 @Consumes(MediaType.APPLICATION_JSON)
 public class SensorResource {
 
-    @GET
-    public Collection<Sensor> getSensors() {
-        return DataStore.sensors.values();
-    }
 
     @GET
     @Path("/{id}")
