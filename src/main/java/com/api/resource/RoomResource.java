@@ -46,7 +46,7 @@ public class RoomResource {
             return Response.status(404).build();
         }
 
-
+        // 🔥 CHECK IF ROOM HAS SENSORS
         for (Sensor s : DataStore.sensors.values()) {
             if (s.getRoomId() == id) {
                 return Response.status(409)
