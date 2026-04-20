@@ -58,4 +58,19 @@ public class RoomResource {
         DataStore.rooms.remove(id);
         return Response.noContent().build();
     }
+    @PUT
+    @Path("/{id}")
+    public Response updateRoom(@PathParam("id") int id, Room updatedRoom) {
+
+        Room existing = DataStore.rooms.get(id);
+
+        if (existing == null) {
+            return Response.status(404).entity("Room not found").build();
+        }
+
+        existing.setName(updatedRoom.getName());
+        existing.setCapacity(updatedRoom.getCapacity());
+
+        return Response.ok(existing).build();
+    }
 }
