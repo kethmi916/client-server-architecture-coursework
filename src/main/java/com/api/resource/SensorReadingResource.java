@@ -1,6 +1,7 @@
 package com.api.resource;
 
 import com.api.DataStore;
+import com.api.exception.ResourceNotFoundException;
 import com.api.model.*;
 
 import javax.ws.rs.*;
@@ -28,8 +29,7 @@ public class SensorReadingResource {
         Sensor sensor = DataStore.sensors.get(sensorId);
 
         if (sensor == null) {
-            return Response.status(404).entity("Sensor not found").build();
-        }
+            throw new ResourceNotFoundException("Sensor not found");        }
 
         if ("MAINTENANCE".equals(sensor.getStatus())) {
             return Response.status(403).entity("Sensor unavailable").build();

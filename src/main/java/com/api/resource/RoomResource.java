@@ -1,6 +1,8 @@
 package com.api.resource;
 
 import com.api.DataStore;
+import com.api.exception.ResourceNotFoundException;
+import com.api.exception.RoomNotEmptyException;
 import com.api.model.Room;
 import com.api.model.Sensor;
 
@@ -49,9 +51,7 @@ public class RoomResource {
 
         for (Sensor s : DataStore.sensors.values()) {
             if (s.getRoomId() == id) {
-                return Response.status(409)
-                        .entity("Room has sensors, cannot delete")
-                        .build();
+                throw new RoomNotEmptyException("Room has sensors");
             }
         }
 
@@ -65,8 +65,7 @@ public class RoomResource {
         Room existing = DataStore.rooms.get(id);
 
         if (existing == null) {
-            return Response.status(404).entity("Room not found").build();
-        }
+            throw new ResourceNotFoundException("Room not found");        }
 
         existing.setName(updatedRoom.getName());
         existing.setCapacity(updatedRoom.getCapacity());

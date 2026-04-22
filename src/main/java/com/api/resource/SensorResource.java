@@ -1,6 +1,8 @@
 package com.api.resource;
 
 import com.api.DataStore;
+import com.api.exception.InvalidDataException;
+import com.api.exception.ResourceNotFoundException;
 import com.api.model.*;
 
 import javax.ws.rs.*;
@@ -59,8 +61,7 @@ public class SensorResource {
     public Response createSensor(Sensor sensor) {
 
         if (!DataStore.rooms.containsKey(sensor.getRoomId())) {
-            return Response.status(422).entity("Invalid room ID").build();
-        }
+            throw new InvalidDataException("Invalid room ID");        }
 
         DataStore.sensors.put(sensor.getId(), sensor);
 
@@ -73,8 +74,7 @@ public class SensorResource {
         Sensor existing = DataStore.sensors.get(id);
 
         if (existing == null) {
-            return Response.status(404).entity("Sensor not found").build();
-        }
+            throw new ResourceNotFoundException("Sensor not found");        }
 
         existing.setType(updatedSensor.getType());
         existing.setStatus(updatedSensor.getStatus());
