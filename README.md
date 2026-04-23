@@ -1,134 +1,184 @@
-Smart Campus REST API
+# Smart Campus REST API
 
-A RESTful web service built using Java, JAX-RS (Jersey), and Maven to manage rooms, sensors, and sensor readings in a smart campus environment.
+A RESTful web service built using Java, JAX-RS (Jersey), Maven, and the Grizzly HTTP server to manage rooms, sensors, and sensor readings in a smart campus environment.
 
-Features
+---
 
-->Manage Rooms (create, view, update, delete)
+## API Design Overview
 
-->Manage Sensors assigned to rooms
+This API follows RESTful principles to manage a smart campus system consisting of Rooms, Sensors, and Sensor Readings.
 
-->Record and retrieve Sensor Readings
+- Rooms represent physical locations within the campus.
+- Sensors are devices assigned to specific rooms.
+- Sensor Readings maintain historical data for each sensor.
 
-->Filter sensors by type
+The API uses a hierarchical resource structure:
 
-->Prevent deletion of rooms with active sensors
+- `/rooms` → manage rooms  
+- `/sensors` → manage sensors  
+- `/sensors/{id}/readings` → manage readings for a specific sensor  
 
-->RESTful API design with proper HTTP status codes
+A sub-resource locator pattern is used to handle nested resources, improving modularity and scalability.
 
-Technologies Used
+All data is stored in-memory using a shared DataStore. Business rules and validation logic are applied to maintain data integrity.
 
-->Java
+---
 
-->JAX-RS (Jersey)
+## Features
 
-->Maven
+- Manage Rooms (create, view, update, delete)
+- Manage Sensors assigned to rooms
+- Record and retrieve Sensor Readings
+- Filter sensors by type using query parameters
+- Prevent deletion of rooms with active sensors
+- Maintain consistency between sensor readings and current values
+- RESTful API design with appropriate HTTP status codes
+- Centralized exception handling and logging
 
-->Grizzly HTTP Server
+---
 
-How to Run the Project
-1. Clone the repository
-   
-    git clone https://github.com/kethmi916/client-server-architecture-coursework.git
+## Technologies Used
 
-    cd client-server-architecture-coursework
+- Java  
+- JAX-RS (Jersey)  
+- Maven  
+- Grizzly HTTP Server  
 
-2. Build the project
+---
 
-    mvn clean install
+## How to Run the Project
 
-3. Run the server
+### 1. Clone the repository
+git clone https://github.com/kethmi916/client-server-architecture-coursework.git
 
-    Run the Main class in your IDE
-    OR via Maven
-    mvn exec:java
+cd client-server-architecture-coursework
 
-4. Access API
 
-     Base URL:
+### 2. Build the project
 
-       http://localhost:8080/api/v1
 
-API Endpoints
+mvn clean install
 
-Rooms
-| Method | Endpoint    | Description       |
-| ------ | ----------- | ----------------- |
-| GET    | /rooms      | Get all rooms     |
-| GET    | /rooms/{id} | Get room by ID    |
-| POST   | /rooms      | Create a new room |
-| PUT    | /rooms/{id} | Update room       |
-| DELETE | /rooms/{id} | Delete room       |
 
-Sensors
-| Method | Endpoint                  | Description     |
-| ------ | ------------------------- | --------------- |
-| GET    | /sensors                  | Get all sensors |
-| GET    | /sensors?type=Temperature | Filter sensors  |
-| GET    | /sensors/{id}             | Get sensor      |
-| POST   | /sensors                  | Create sensor   |
-| PUT    | /sensors/{id}             | Update sensor   |
-| DELETE | /sensors/{id}             | Delete sensor   |
+### 3. Run the server
 
-Sensor Readings
-| Method | Endpoint               | Description  |
-| ------ | ---------------------- | ------------ |
-| GET    | /sensors/{id}/readings | Get readings |
-| POST   | /sensors/{id}/readings | Add reading  |
+Run the `Main` class from your IDE  
+or use Maven:
 
-Sample cURL Commands
 
-Get all rooms
+mvn exec:java
 
-	curl http://localhost:8080/api/v1/rooms
-	
-Create a room
 
-	curl -X POST http://localhost:8080/api/v1/rooms \
-	
-	-H "Content-Type: application/json" \
-	
-	-d "{\"id\":3,\"name\":\"Lab\",\"capacity\":40}"
-	
-Get Sensors
+### 4. Access the API
 
-	curl http://localhost:8080/api/v1/sensors
-	
-Filter sensors
+Base URL:
 
-	curl "http://localhost:8080/api/v1/sensors?type=Temperature"
-	
-Add sensor reading
 
-	curl -X POST http://localhost:8080/api/v1/sensors/1/readings \
+http://localhost:8080/api/v1
 
-	-H "Content-Type: application/json" \
 
-	-d "{\"value\":25.5}"
-	
-Get sensor readings
+---
 
-	curl http://localhost:8080/api/v1/sensors/1/readings
+## API Endpoints
 
-Error Handling
+### Rooms
 
-404 Not Found → Resource does not exist
+| Method | Endpoint        | Description            |
+|--------|---------------|------------------------|
+| GET    | /rooms        | Get all rooms          |
+| GET    | /rooms/{id}   | Get room by ID         |
+| POST   | /rooms        | Create a new room      |
+| PUT    | /rooms/{id}   | Update a room          |
+| DELETE | /rooms/{id}   | Delete a room          |
 
-400 Bad Request → Invalid input
+---
 
-403 Forbidden → Sensor in maintenance
+### Sensors
 
-409 Conflict → Cannot delete room with sensors
+| Method | Endpoint                  | Description           |
+|--------|--------------------------|-----------------------|
+| GET    | /sensors                 | Get all sensors       |
+| GET    | /sensors?type=Temperature| Filter sensors        |
+| GET    | /sensors/{id}            | Get sensor by ID      |
+| POST   | /sensors                 | Create a sensor       |
+| PUT    | /sensors/{id}            | Update a sensor       |
+| DELETE | /sensors/{id}            | Delete a sensor       |
 
-Note
+---
 
-Data is stored in-memory (DataStore)
+### Sensor Readings
 
-Designed for demonstration purposes
+| Method | Endpoint                      | Description           |
+|--------|------------------------------|-----------------------|
+| GET    | /sensors/{id}/readings       | Get all readings      |
+| POST   | /sensors/{id}/readings       | Add a new reading     |
 
-Tested using Postman
+---
 
-Author
+## Sample cURL Commands
+
+### Get all rooms
+
+curl http://localhost:8080/api/v1/rooms
+
+
+### Create a room
+
+curl -X POST http://localhost:8080/api/v1/rooms
+
+-H "Content-Type: application/json"
+-d "{"id":3,"name":"Lab","capacity":40}"
+
+
+### Get all sensors
+
+curl http://localhost:8080/api/v1/sensors
+
+
+### Filter sensors by type
+
+curl "http://localhost:8080/api/v1/sensors?type=Temperature
+"
+
+
+### Add sensor reading
+
+curl -X POST http://localhost:8080/api/v1/sensors/1/readings
+
+-H "Content-Type: application/json"
+-d "{"id":1,"timestamp":1710000000,"value":25.5}"
+
+
+### Delete a room
+
+curl -X DELETE http://localhost:8080/api/v1/rooms/3
+
+
+---
+
+## Error Handling
+
+The API uses custom exception handling to provide consistent and meaningful responses:
+
+- **400 Bad Request** → Invalid input data  
+- **403 Forbidden** → Sensor is in maintenance state  
+- **404 Not Found** → Resource does not exist  
+- **409 Conflict** → Attempt to delete a room with active sensors  
+- **422 Unprocessable Entity** → Invalid linked resource (e.g., non-existent room ID)  
+- **500 Internal Server Error** → Unexpected server error  
+
+Custom exception mappers ensure that internal server details are not exposed to clients.
+
+---
+
+## Notes
+
+- Data is stored in-memory using a DataStore class  
+- The application is designed for demonstration purposes  
+- Tested using Postman  
+
+---
+
+## Author
 
 Kethmi Edirisinghe
-	
