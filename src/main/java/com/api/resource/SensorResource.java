@@ -20,8 +20,7 @@ public class SensorResource {
         Sensor sensor = DataStore.sensors.get(id);
 
         if (sensor == null) {
-            return Response.status(404).entity("Sensor not found").build();
-        }
+            throw new ResourceNotFoundException("Sensor not found");        }
 
         return Response.ok(sensor).build();
     }
@@ -36,8 +35,7 @@ public class SensorResource {
         Sensor removed = DataStore.sensors.remove(id);
 
         if (removed == null) {
-            return Response.status(404).entity("Sensor not found").build();
-        }
+            throw new ResourceNotFoundException("Sensor not found");        }
 
         return Response.noContent().build();
     }
